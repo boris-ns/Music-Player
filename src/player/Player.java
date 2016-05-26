@@ -2,9 +2,12 @@ package player;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -15,8 +18,9 @@ public class Player extends JFrame
 	
 	private static final long serialVersionUID = 1L;
 	private JPanel browsePanel, namePanel, buttonPanel;
-	private JLabel songName;
+	private JLabel name;
 	private JButton btnBrowse, btnPlay, btnPause, btnStop;
+	private String songPath, songName;
 	
 	public Player()
 	{
@@ -37,12 +41,30 @@ public class Player extends JFrame
 		browsePanel = new JPanel();
 		add(browsePanel, BorderLayout.NORTH);
 		btnBrowse = new JButton("Browse");
+		btnBrowse.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e) 
+			{
+				JFileChooser chooser = new JFileChooser();
+				int rVal = chooser.showOpenDialog(Player.this);
+
+				if(rVal == JFileChooser.APPROVE_OPTION)
+				{
+					songPath = chooser.getCurrentDirectory().toString();
+					songName = chooser.getSelectedFile().getName();
+				}
+				System.out.println(songPath);
+				System.out.println(songName);
+			}
+			
+		});
 		browsePanel.add(btnBrowse);
 		
 		namePanel = new JPanel();
 		add(namePanel, BorderLayout.CENTER);
-		songName = new JLabel("Song name");
-		namePanel.add(songName);
+		name = new JLabel("Song name");
+		namePanel.add(name);
 		
 		buttonPanel = new JPanel();
 		add(buttonPanel, BorderLayout.SOUTH);
