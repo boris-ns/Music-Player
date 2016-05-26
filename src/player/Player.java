@@ -22,6 +22,7 @@ public class Player extends JFrame
 	private JButton btnBrowse, btnPlay, btnPause, btnStop;
 	private String fullSongPath;
 	private Audio song;
+	private boolean isFirstSong = true;
 	
 	public Player()
 	{
@@ -56,8 +57,16 @@ public class Player extends JFrame
 					String name = chooser.getSelectedFile().getName();
 					fullSongPath = path + "\\" + name;
 					
-					song = new Audio(fullSongPath);
-					song.play(-15.0f);
+					if(!isFirstSong)
+					{
+						song.close();
+						playSong(fullSongPath, -15.0f);
+					}
+					else
+					{
+						isFirstSong = false;
+						playSong(fullSongPath, -15.0f);
+					}
 					
 					System.out.println(path);
 					System.out.println(name);
@@ -100,5 +109,11 @@ public class Player extends JFrame
 		buttonPanel.add(btnPlay);
 		buttonPanel.add(btnPause);
 		buttonPanel.add(btnStop);
+	}
+	
+	private void playSong(String path, float volume)
+	{
+		song = new Audio(path);
+		song.play(volume);
 	}
 }
