@@ -23,6 +23,7 @@ public class Player extends JFrame
 	private String fullSongPath;
 	private Audio song;
 	private boolean isFirstSong = true;
+	private int framePos;
 	
 	public Player()
 	{
@@ -91,6 +92,29 @@ public class Player extends JFrame
 		btnPlay = new JButton(new ImageIcon("res/play.png"));
 		btnPause = new JButton(new ImageIcon("res/pause.png"));
 		btnStop = new JButton(new ImageIcon("res/stop.png"));
+		
+		btnPlay.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				song.playAfterPause(framePos);
+				btnPlay.setEnabled(false);
+				btnPause.setEnabled(true);
+			}
+		});
+		
+		btnPause.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				framePos = song.getFramePosition();
+				song.stop();
+				btnPlay.setEnabled(true);
+				btnPause.setEnabled(false);
+			}
+		});
 		
 		btnStop.addActionListener(new ActionListener()
 		{

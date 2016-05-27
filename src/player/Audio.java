@@ -58,7 +58,7 @@ public class Audio
 	}
 	
 	// Metoda koja stopira SFX
-	private void stop()
+	public void stop()
 	{
 		if(clip.isRunning())
 			clip.stop();
@@ -69,6 +69,17 @@ public class Audio
 	{
 		stop();
 		clip.close();
+	}
+	
+	public void playAfterPause(int frame)
+	{
+		clip.setFramePosition(frame);
+		clip.start();
+	}
+	
+	public int getFramePosition()
+	{
+		return clip.getFramePosition();
 	}
 	
 	// Metoda koja sluzi za podesavanje jacine zvuka sound effect-a
