@@ -112,11 +112,11 @@ public class Player extends JFrame
 		
 		buttonPanel = new JPanel();
 		add(buttonPanel, BorderLayout.SOUTH);
-		volDown = new JButton("-");
 		btnPlay = new JButton(new ImageIcon("res/play.png"));
 		btnPause = new JButton(new ImageIcon("res/pause.png"));
 		btnStop = new JButton(new ImageIcon("res/stop.png"));
-		volUp = new JButton("+");
+		volUp = new JButton(new ImageIcon("res/volUp.png"));
+		volDown = new JButton(new ImageIcon("res/volDown.png"));
 		
 		btnPlay.addActionListener(new ActionListener()
 		{
