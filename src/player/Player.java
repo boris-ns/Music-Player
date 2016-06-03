@@ -4,12 +4,16 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 public class Player extends JFrame
@@ -25,7 +29,7 @@ public class Player extends JFrame
 	private boolean isFirstSong = true;
 	private int framePos;
 	private float volume;
-	private Thread isRunningThread;
+	private Thread textMove;
 	
 	public Player()
 	{
@@ -59,7 +63,14 @@ public class Player extends JFrame
 				{
 					String path = chooser.getCurrentDirectory().toString();
 					String name = chooser.getSelectedFile().getName();
-					fullSongPath = path + "\\" + name;
+					fullSongPath = path + "\\" + name;				
+					System.out.println(fullSongPath);
+					
+					songName.setText(name);				
+					btnPause.setEnabled(true);
+					btnStop.setEnabled(true);
+					volUp.setEnabled(true);
+					volDown.setEnabled(true);
 					
 					if(!isFirstSong)
 					{
@@ -71,17 +82,6 @@ public class Player extends JFrame
 						isFirstSong = false;
 						playSong(fullSongPath, volume, 0);
 					}
-					
-					System.out.println(path);
-					System.out.println(name);
-					System.out.println(fullSongPath);
-					
-					songName.setText(name);
-					
-					btnPause.setEnabled(true);
-					btnStop.setEnabled(true);
-					volUp.setEnabled(true);
-					volDown.setEnabled(true);
 				}			
 			}		
 		});
@@ -171,7 +171,23 @@ public class Player extends JFrame
 	
 	private void playSong(String path, float volume, int framePos)
 	{
-		song = new Audio(path);
+		try
+		{
+			song = new Audio(path);
+		} 
+		catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) 
+		{
+			e.printStackTrace();
+			JOptionPane.showMessageDialog(Player.this, "Ovaj fajl ne moze da se otvori", "Greska!", JOptionPane.ERROR_MESSAGE);
+		
+			songName.setText("Song name");
+			volUp.setEnabled(false);
+			volDown.setEnabled(false);
+			btnPlay.setEnabled(false);
+			btnPause.setEnabled(false);
+			btnStop.setEnabled(false);
+		}
+		
 		song.play(volume, framePos);
 	}
 }
