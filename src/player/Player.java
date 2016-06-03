@@ -19,11 +19,12 @@ public class Player extends JFrame
 	private static final long serialVersionUID = 1L;
 	private JPanel browsePanel, namePanel, buttonPanel;
 	private JLabel songName;
-	private JButton btnBrowse, btnPlay, btnPause, btnStop;
+	private JButton btnBrowse, btnPlay, btnPause, btnStop, volUp, volDown;
 	private String fullSongPath;
 	private Audio song;
 	private boolean isFirstSong = true;
 	private int framePos;
+	private float volume;
 	
 	public Player()
 	{
@@ -35,6 +36,7 @@ public class Player extends JFrame
 		setMinimumSize(new Dimension(WIDTH, HEIGHT));
 		
 		initWindow();
+		volume = -20.0f;
 		
 		setVisible(true);
 	}
@@ -61,12 +63,12 @@ public class Player extends JFrame
 					if(!isFirstSong)
 					{
 						song.close();
-						playSong(fullSongPath, -15.0f);
+						playSong(fullSongPath, volume, 0);
 					}
 					else
 					{
 						isFirstSong = false;
-						playSong(fullSongPath, -15.0f);
+						playSong(fullSongPath, volume, 0);
 					}
 					
 					System.out.println(path);
@@ -77,6 +79,8 @@ public class Player extends JFrame
 					
 					btnPause.setEnabled(true);
 					btnStop.setEnabled(true);
+					volUp.setEnabled(true);
+					volDown.setEnabled(true);
 				}			
 			}		
 		});
@@ -89,9 +93,11 @@ public class Player extends JFrame
 		
 		buttonPanel = new JPanel();
 		add(buttonPanel, BorderLayout.SOUTH);
+		volDown = new JButton("-");
 		btnPlay = new JButton(new ImageIcon("res/play.png"));
 		btnPause = new JButton(new ImageIcon("res/pause.png"));
 		btnStop = new JButton(new ImageIcon("res/stop.png"));
+		volUp = new JButton("+");
 		
 		btnPlay.addActionListener(new ActionListener()
 		{
@@ -122,22 +128,47 @@ public class Player extends JFrame
 			public void actionPerformed(ActionEvent e)
 			{
 				song.close();
+				songName.setText("Song name");
 				btnPause.setEnabled(false);
 				btnStop.setEnabled(false);
 			}
 		});
 		
+		volUp.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				volume += 1.5f;
+				song.play(volume, song.getFramePosition());
+			}
+		});
+		
+		volDown.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				volume -= 1.5f;
+				song.play(volume, song.getFramePosition());
+			}
+		});
+
+		volUp.setEnabled(false);
+		volDown.setEnabled(false);
 		btnPlay.setEnabled(false);
 		btnPause.setEnabled(false);
 		btnStop.setEnabled(false);
+		buttonPanel.add(volUp);
 		buttonPanel.add(btnPlay);
 		buttonPanel.add(btnPause);
 		buttonPanel.add(btnStop);
+		buttonPanel.add(volDown);
 	}
 	
-	private void playSong(String path, float volume)
+	private void playSong(String path, float volume, int framePos)
 	{
 		song = new Audio(path);
-		song.play(volume);
+		song.play(volume, framePos);
 	}
 }

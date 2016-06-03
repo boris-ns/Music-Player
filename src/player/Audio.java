@@ -51,9 +51,9 @@ public class Audio
 	}
 	
 	// Metoda koja startuje SFX 
-	public void play(float volume)
+	public void play(float volume, int framePos)
 	{
-		playClip(volume);
+		playClip(volume, framePos);
 		clip.start();
 	}
 	
@@ -83,7 +83,7 @@ public class Audio
 	}
 	
 	// Metoda koja sluzi za podesavanje jacine zvuka sound effect-a
-	private void playClip(float volume)
+	private void playClip(float volume, int framePos)
 	{
 		if(clip == null)
 			return;
@@ -91,7 +91,19 @@ public class Audio
 		stop();
 		
 		FloatControl gainControl = (FloatControl)clip.getControl(FloatControl.Type.MASTER_GAIN);
-		gainControl.setValue(volume);
-		clip.setFramePosition(0);
+		try
+		{
+			gainControl.setValue(volume);
+			System.out.println(volume);
+		}
+		catch(IllegalArgumentException e)
+		{
+			//e.printStackTrace();
+			if(volume > gainControl.getMaximum())
+				volume = gainControl.getMaximum();
+			else if(volume < gainControl.getMinimum())
+				volume = gainControl.getMinimum();
+		}	
+		clip.setFramePosition(framePos);
 	}
 }
