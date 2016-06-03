@@ -25,6 +25,7 @@ public class Player extends JFrame
 	private boolean isFirstSong = true;
 	private int framePos;
 	private float volume;
+	private Thread isRunningThread;
 	
 	public Player()
 	{
@@ -81,6 +82,24 @@ public class Player extends JFrame
 					btnStop.setEnabled(true);
 					volUp.setEnabled(true);
 					volDown.setEnabled(true);
+					
+					isRunningThread = new Thread("Is song running")
+					{
+						@Override
+						public void run()
+						{
+							if(!song.getIsRunning())
+							{
+								songName.setText("Song name");
+								volUp.setEnabled(false);
+								volDown.setEnabled(false);
+								btnPlay.setEnabled(false);
+								btnPause.setEnabled(false);
+								btnStop.setEnabled(false);
+							}
+						}
+					};
+					
 				}			
 			}		
 		});
@@ -131,6 +150,8 @@ public class Player extends JFrame
 				songName.setText("Song name");
 				btnPause.setEnabled(false);
 				btnStop.setEnabled(false);
+				volUp.setEnabled(false);
+				volDown.setEnabled(false);
 			}
 		});
 		
@@ -140,7 +161,7 @@ public class Player extends JFrame
 			public void actionPerformed(ActionEvent e)
 			{
 				volume += 1.5f;
-				song.play(volume, song.getFramePosition());
+				song.changeVolume(volume);
 			}
 		});
 		
@@ -150,7 +171,7 @@ public class Player extends JFrame
 			public void actionPerformed(ActionEvent e)
 			{
 				volume -= 1.5f;
-				song.play(volume, song.getFramePosition());
+				song.changeVolume(volume);
 			}
 		});
 

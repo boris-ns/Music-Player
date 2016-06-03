@@ -82,6 +82,17 @@ public class Audio
 		return clip.getFramePosition();
 	}
 	
+	public boolean getIsRunning()
+	{
+		return clip.isRunning();
+	}
+	
+	// Metoda uz pomoc koje korisnik moze da menja jacinu zvuka
+	public void changeVolume(float volume)
+	{
+		volumeControl(volume);
+	}
+	
 	// Metoda koja sluzi za podesavanje jacine zvuka sound effect-a
 	private void playClip(float volume, int framePos)
 	{
@@ -89,7 +100,13 @@ public class Audio
 			return;
 		
 		stop();
+		volumeControl(volume);
 		
+		clip.setFramePosition(framePos);
+	}
+	
+	private void volumeControl(float volume)
+	{
 		FloatControl gainControl = (FloatControl)clip.getControl(FloatControl.Type.MASTER_GAIN);
 		try
 		{
@@ -104,6 +121,5 @@ public class Audio
 			else if(volume < gainControl.getMinimum())
 				volume = gainControl.getMinimum();
 		}	
-		clip.setFramePosition(framePos);
 	}
 }
