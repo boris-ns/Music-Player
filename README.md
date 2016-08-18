@@ -1,2 +1,4 @@
 # Music-Player
-Music player i'm making in Java
+
+Music player made in Java using Java Swing.
+
